@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 export default async function Page() {
   const client = createClient();
   const page = await client
-    .getByUID("page", "homepage", { lang: "en-us" })
+    .getByUID("page", "homepage", { lang: "es-es" })
     .catch(() => notFound());
   const { lang, alternate_languages } = page;
   // console.log("lang", lang);
@@ -33,7 +33,7 @@ export default async function Page() {
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient();
   const page = await client
-    .getByUID("page", "homepage", { lang: "en-us" })
+    .getByUID("page", "homepage", { lang: "es-es" })
     .catch(() => notFound());
   const settings = await getSettings();
   const {
@@ -61,8 +61,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: "/",
       languages: {
-        "en-US": "/",
-        "es-ES": "/es",
+        "en-US": "/en",
+        "es-ES": "/",
         "x-default": "/",
       },
     },
@@ -71,7 +71,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const client = createClient();
-  const pages = await client.getAllByType("page", { lang: "en-us" });
+  const pages = await client.getAllByType("page", { lang: "es-es" });
 
   return pages.map((page) => {
     return { uid: page.uid };

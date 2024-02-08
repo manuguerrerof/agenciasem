@@ -4,32 +4,31 @@ import { SliceZone } from "@prismicio/react";
 
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
-import { domain_name, getSettings } from "@/utils";
+import Blog from "@/components/Blog/Blog";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import BlogListing from "@/components/Blog/BlogListing";
+import {
+  domain_name,
+  generateAlternatesLanguagesOptionsForMetadata,
+  getSettings,
+} from "@/utils";
 
-export default async function Page() {
+type Params = { uid: string };
+
+export default async function Page({ params }: { params: Params }) {
   const client = createClient();
   const page = await client
-    .getSingle("blog_listing", { lang: "es-es" })
+    .getByUID("blog", params.uid, { lang: "en-us" })
     .catch(() => notFound());
-  const settings: any = await getSettings();
+  const { lang, alternate_languages, tags } = page;
+  const settings = await client.getSingle("settings");
   const { text_color } = settings.data;
-  const { lang, alternate_languages } = page;
-
-  const { featured_post } = page.data;
-  //@ts-ignore
-  const featuredPost = await client.getByUID("blog", featured_post?.uid, {
-    lang: lang,
-  });
-
   return (
     <>
       <Header lang={lang} />
-      <BlogListing
+      <Blog
         data={page.data}
-        featuredPost={featuredPost}
+        tags={tags}
         context={{ lang: lang }}
         text_color={text_color}
       />
@@ -43,13 +42,17 @@ export default async function Page() {
   );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
   const client = createClient();
   const page = await client
-    .getSingle("blog_listing", { lang: "es-es" })
+    .getByUID("blog", params.uid, { lang: "en-us" })
     .catch(() => notFound());
 
-  const settings: any = await getSettings();
+  const settings = await getSettings();
   const {
     meta_title: default_meta_title,
     meta_description: default_meta_description,
@@ -57,6 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
   } = settings.data;
 
   const { meta_title, meta_description, meta_image } = page.data;
+  const { lang, alternate_languages } = page;
 
   return {
     title: meta_title || default_meta_title || "Fallback Title",
@@ -69,16 +73,26 @@ export async function generateMetadata(): Promise<Metadata> {
       title: meta_title || default_meta_title || "Fallback Meta Title",
       description:
         meta_description || default_meta_description || "Fallback Meta Title",
-      url: domain_name + "/es/blog/",
+      url: domain_name + "/en/blog/" + params.uid,
     },
-    metadataBase: new URL(domain_name), //should always be the same
+    metadataBase: new URL(domain_name), // should always be the same
     alternates: {
-      canonical: "/es/blog",
-      languages: {
-        "en-US": "/blog",
-        "es-ES": "/es/blog",
-        "x-default": "/es/blog",
-      },
+      canonical: "/en/blog/" + params.uid + "/",
+      languages: generateAlternatesLanguagesOptionsForMetadata({
+        middleRoute: "blog/",
+        lang: lang,
+        uid: params.uid,
+        alternate_languages: alternate_languages,
+      }),
     },
   };
+}
+
+export async function generateStaticParams() {
+  const client = createClient();
+  const pages = await client.getAllByType("blog");
+
+  return pages.map((page) => {
+    return { uid: page.uid };
+  });
 }

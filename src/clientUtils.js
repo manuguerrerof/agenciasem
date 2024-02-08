@@ -3,10 +3,10 @@ export function getLinkOfAlternatePage(pathname, alternate_uid) {
   console.log("alternate_uid", alternate_uid);
   let alternateUID = alternate_uid == "homepage" ? "" : alternate_uid;
   let alternatePathName = "";
-  if (pathname.includes("/es")) {
+  if (pathname.includes("/en")) {
     alternatePathName += "";
   } else {
-    alternatePathName += "/es";
+    alternatePathName += "/en";
   }
   if (pathname.includes("/blog")) {
     alternatePathName += "/blog";

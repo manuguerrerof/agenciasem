@@ -18,7 +18,7 @@ type Params = { uid: string };
 export default async function Page({ params }: { params: Params }) {
   const client = createClient();
   const page = await client
-    .getByUID("blog", params.uid, { lang: "en-us" })
+    .getByUID("blog", params.uid, { lang: "es-es" })
     .catch(() => notFound());
   const { lang, alternate_languages, tags } = page;
   const settings = await client.getSingle("settings");
@@ -49,7 +49,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const client = createClient();
   const page = await client
-    .getByUID("blog", params.uid, { lang: "en-us" })
+    .getByUID("blog", params.uid, { lang: "es-es" })
     .catch(() => notFound());
 
   const settings = await getSettings();

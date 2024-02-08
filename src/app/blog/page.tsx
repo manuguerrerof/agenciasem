@@ -12,7 +12,7 @@ import BlogListing from "@/components/Blog/BlogListing";
 export default async function Page() {
   const client = createClient();
   const page = await client
-    .getSingle("blog_listing", { lang: "en-us" })
+    .getSingle("blog_listing", { lang: "es-es" })
     .catch(() => notFound());
   const settings: any = await getSettings();
   const { text_color } = settings.data;
@@ -44,7 +44,7 @@ export default async function Page() {
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient();
   const page = await client
-    .getSingle("blog_listing", { lang: "en-us" })
+    .getSingle("blog_listing", { lang: "es-es" })
     .catch(() => notFound());
 
   const settings: any = await getSettings();
@@ -73,8 +73,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: "/blog",
       languages: {
-        "en-US": "/blog",
-        "es-ES": "/es/blog",
+        "en-US": "/en/blog",
+        "es-ES": "/blog",
         "x-default": "/blog",
       },
     },

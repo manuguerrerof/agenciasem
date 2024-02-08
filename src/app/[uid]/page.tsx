@@ -17,7 +17,7 @@ type Params = { uid: string };
 export default async function Page({ params }: { params: Params }) {
   const client = createClient();
   const page = await client
-    .getByUID("page", params.uid, { lang: "en-us" })
+    .getByUID("page", params.uid, { lang: "es-es" })
     .catch(() => notFound());
   const { lang, alternate_languages } = page;
   // console.log("lang", lang);
@@ -43,7 +43,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const client = createClient();
   const page = await client
-    .getByUID("page", params.uid, { lang: "en-us" })
+    .getByUID("page", params.uid, { lang: "es-es" })
     .catch(() => notFound());
   const settings = await getSettings();
   const {
@@ -85,7 +85,7 @@ export async function generateMetadata({
 // test pageSpeed by removing this. This function is already called in homepage route, and static params are already generated
 export async function generateStaticParams() {
   const client = createClient();
-  const pages = await client.getAllByType("page", { lang: "en-us" });
+  const pages = await client.getAllByType("page", { lang: "es-es" });
 
   return pages.map((page) => {
     return { uid: page.uid };

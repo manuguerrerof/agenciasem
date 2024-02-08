@@ -7,19 +7,32 @@ import { components } from "@/slices";
 import { domain_name, getSettings } from "@/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BlogListing from "@/components/Blog/BlogListing";
 
 export default async function Page() {
   const client = createClient();
   const page = await client
-    .getByUID("page", "homepage", { lang: "es-es" })
+    .getSingle("blog_listing", { lang: "en-us" })
     .catch(() => notFound());
+  const settings: any = await getSettings();
+  const { text_color } = settings.data;
   const { lang, alternate_languages } = page;
-  // console.log("lang", lang);
-  // console.log("alt_lang", alternate_languages);
+
+  const { featured_post } = page.data;
+  //@ts-ignore
+  const featuredPost = await client.getByUID("blog", featured_post?.uid, {
+    lang: lang,
+  });
 
   return (
     <>
       <Header lang={lang} />
+      <BlogListing
+        data={page.data}
+        featuredPost={featuredPost}
+        context={{ lang: lang }}
+        text_color={text_color}
+      />
       <SliceZone
         slices={page.data.slices}
         components={components}
@@ -33,9 +46,10 @@ export default async function Page() {
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient();
   const page = await client
-    .getByUID("page", "homepage", { lang: "es-es" })
+    .getSingle("blog_listing", { lang: "en-us" })
     .catch(() => notFound());
-  const settings = await getSettings();
+
+  const settings: any = await getSettings();
   const {
     meta_title: default_meta_title,
     meta_description: default_meta_description,
@@ -55,25 +69,16 @@ export async function generateMetadata(): Promise<Metadata> {
       title: meta_title || default_meta_title || "Fallback Meta Title",
       description:
         meta_description || default_meta_description || "Fallback Meta Title",
-      url: domain_name + "/es",
+      url: domain_name + "/en/blog/",
     },
-    metadataBase: new URL(domain_name),
+    metadataBase: new URL(domain_name), //should always be the same
     alternates: {
-      canonical: "/es",
+      canonical: "/en/blog",
       languages: {
-        "es-ES": "/es",
-        "en-US": "/",
-        "x-default": "/es",
+        "en-US": "/en/blog",
+        "es-ES": "/blog",
+        "x-default": "/en/blog",
       },
     },
   };
-}
-
-export async function generateStaticParams() {
-  const client = createClient();
-  const pages = await client.getAllByType("page", { lang: "en-us" });
-
-  return pages.map((page) => {
-    return { uid: page.uid };
-  });
 }
