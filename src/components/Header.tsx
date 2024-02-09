@@ -8,14 +8,14 @@ const Header = async ({ lang }: any) => {
   ).data;
   return (
     <div className="relative font-body">
-      <div className="w-full max-w-[1256px] mx-auto px-3 mobile:px-6 flex justify-center flex-row items-center">
+      <div className="w-full max-w-[1256px] mx-auto px-3 mobile:px-6 flex justify-center flex-row items-center mt-2 mobile:mt-4 ">
         <header className="flex flex-grow py-5 mobile_480:py-9 font-inter justify-between items-center">
           <div
             className="items-center w-full justify-between flex mr-1 mb-0 "
             style={{ alignItems: "center" }}
           >
-            <div className="block mm-logo-div cursor-pointer">
-              <Link href={lang == "es-es" ? "/es" : "/"}>
+            <div className="block mm-logo-div cursor-pointer scale-80 mobile:scale-100">
+              <Link href={lang == "es-es" ? "/" : "/en"}>
                 <PrismicNextImage field={logo} />
               </Link>
             </div>

@@ -12,7 +12,7 @@
           "label": "Logo",
           "constraint": {
             "width": 170,
-            "height": null
+            "height": 64
           },
           "thumbnails": []
         }
