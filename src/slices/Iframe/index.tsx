@@ -1,5 +1,6 @@
+import Heading from "@/components/Heading";
 import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
 
 /**
  * Props for `Iframe`.
@@ -15,8 +16,27 @@ const Iframe = ({ slice }: IframeProps): JSX.Element => {
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
     >
+      <div className="mt-10 mobile:mt-20 tablet:mt-36">
+        <PrismicRichText
+          field={slice.primary.title}
+          components={{
+            heading2: ({ children }: any) => {
+              return (
+                <Heading
+                  as="h2"
+                  size="lg"
+                  className="w-full px-5 text-center font-bold tracking-[-0.02em] text-2xl tablet:text-3xl"
+                  color={"#fff"}
+                >
+                  {children}
+                </Heading>
+              );
+            },
+          }}
+        />
+      </div>
       <div
-        className="mx-auto w-full"
+        className="mx-auto w-full mt-4 mobile:mt-8"
         style={{
           height: slice.primary.height + "px",
           maxWidth: slice.primary.max_width + "px",
